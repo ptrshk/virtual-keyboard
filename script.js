@@ -153,3 +153,37 @@ let arrowDownButton = arrayLines[4].children[6];
 let arrowRightButton = arrayLines[4].children[7];
 let capsLockButton = arrayLines[2].children[0];
 
+let checkAnimation = 0;
+let checkElem = {};
+
+function animationDown(e) {
+  if (!checkAnimation || checkElem[e.innerText] === undefined) {
+    checkElem[e.innerText] = 1;
+    let radius = MIN_RADIUS;
+    setInterval(() => {
+      radius = +radius;
+      if (radius < MAX_RADIUS) {
+        radius += 1; e.style.borderRadius = `${radius}px`;
+      }
+    }, 5);
+    checkAnimation = 1;
+  }
+}
+
+function animationUp(e) {
+  checkAnimation = 0;
+  delete checkElem[e.innerText];
+  if (e.className !== "key-wrapper") {
+    let radius = MAX_RADIUS;
+    let interval = setInterval(() => {
+      radius = +radius;
+      if (radius > MIN_RADIUS) {
+        radius -= 1; e.style.borderRadius = `${radius}px`;
+      } else {
+        e.style.borderRadius = "";
+        clearInterval(interval);
+      }
+    }, 5);
+  }
+}
+

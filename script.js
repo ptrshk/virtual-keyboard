@@ -242,3 +242,243 @@ wrapper.addEventListener("click", (e) => {
     }
   }
 });
+
+function buttonDown(e) {
+  if (e !== undefined) {
+    e.click();
+    if (e.className !== "key-wrapper") {
+      animationDown(e);
+      e.classList.add("active");
+    }
+  }
+}
+
+function buttonUp(e) {
+  if (e !== undefined) {
+    animationUp(e);
+    e.classList.remove("active");
+  }
+}
+
+let checkShiftUp = 1; // проверка нажата ли кнопка shift
+
+function shiftDown() {
+  if (checkShiftUp) {
+    checkShiftUp = 0;
+    switch (type) {
+      case "ruSmall":
+        type = "ruShift";
+        break;
+      case "enSmall":
+        type = "enShift";
+        break;
+      case "ruCaps":
+        type = "ruShiftCaps";
+        break;
+      default:
+        type = "enShiftCaps";
+    }
+    change();
+  }
+}
+
+function shiftUp() {
+  checkShiftUp = 1;
+  switch (type) {
+    case "ruShift":
+      type = "ruSmall";
+      break;
+    case "enShift":
+      type = "enSmall";
+      break;
+    case "ruShiftCaps":
+      type = "ruCaps";
+      break;
+    default:
+      type = "enCaps";
+  }
+  change();
+}
+
+wrapper.addEventListener("mousedown", (e) => {
+  textInput.focus();
+  let buttonClassName = e.target.className;
+  let buttonInnerText = e.target.innerText;
+  if (buttonClassName !== "key-wrapper" && buttonClassName !== "line") {
+    e.target.classList.add("active");
+    if (buttonInnerText !== "CapsLock") {
+      animationDown(e.target);
+      if (buttonInnerText === "Shift") {
+        shiftDown();
+        e.target.classList.add("active");
+      }
+    }
+  }
+});
+
+wrapper.addEventListener("mouseup", (e) => {
+  let buttonClassName = e.target.className;
+  let buttonInnerText = e.target.innerText;
+  if (buttonClassName !== "key-wrapper" && buttonClassName !== "line" && buttonInnerText !== "CapsLock") {
+    e.target.classList.remove("active");
+    animationUp(e.target);
+    if (buttonInnerText === "Shift") {
+      shiftUp();
+      e.target.classList.remove("active");
+      change();
+    }
+  }
+});
+
+wrapper.addEventListener("mouseout", (e) => {
+  let buttonClassName = e.target.className;
+  let buttonInnerText = e.target.innerText;
+  if (buttonClassName.indexOf("active") !== -1) {
+    if (buttonClassName !== "key-wrapper" && buttonClassName !== "line" && buttonInnerText !== "CapsLock") {
+      if (buttonInnerText === "Shift") {
+        shiftUp();
+      }
+      e.target.classList.remove("active");
+      animationUp(e.target);
+    }
+  }
+});
+
+let checkCaps = 1; // проверка нажата ли кнопка CapsLock
+let checkChange = 1; // проверка нажаты ли кнопки для смены языка
+let checkCtrl = 0; // проверка нажата ли кнопка ctrl
+let checkAlt = 0; // проверка нажата ли кнопка alt
+
+function changeLanguage() {
+  if (checkCtrl && checkAlt && checkChange) {
+    checkChange = 0;
+    if (type[0] === "r") {
+      type = (`en${type.slice(2)}`);
+    } else {
+      type = (`ru${type.slice(2)}`);
+    }
+    change();
+  }
+}
+
+function findOtherButton(key) {
+  let saveType = type;
+  if (type[0] !== "e") {
+    type = (`en${type.slice(2)}`);
+    change();
+  }
+  for (let i = 0; i < arrayLines.length; i++) {
+    for (let j = 0; j < arrayLines[i].children.length; j++) {
+      if (key === arrayLines[i].children[j].innerText) {
+        type = saveType;
+        change();
+        return arrayLines[i].children[j];
+      }
+    }
+  }
+}
+
+function findButton(code, key) {
+  switch (code) {
+    case "ShiftLeft":
+      return shiftLeftButton;
+    case "ShiftRight":
+      return shiftRightButton;
+    case "Space":
+      return spaceButton;
+    case "Delete":
+      return deleteButton;
+    case "ControlLeft":
+      return controlLeftButton;
+    case "ControlRight":
+      return controlRightButton;
+    case "AltRight":
+      return altRightButton;
+    case "AltLeft":
+      return altLeftButton;
+    case "MetaLeft":
+      return winButton;
+    case "CapsLock":
+      return wrapper;
+    case "ArrowUp":
+      return arrowUpButton;
+    case "ArrowLeft":
+      return arrowLeftButton;
+    case "ArrowDown":
+      return arrowDownButton;
+    case "ArrowRight":
+      return arrowRightButton;
+    default:
+      return findOtherButton(key);
+  }
+}
+
+function checkCapsLock() {
+  if (checkCaps) {
+    checkCaps = 0;
+    capsLock();
+  }
+}
+
+let keydown = (e) => {
+  e.preventDefault();
+  switch (e.code) {
+    case "ShiftLeft":
+      shiftDown();
+      break;
+    case "ShiftRight":
+      shiftDown();
+      break;
+    case "CapsLock":
+      checkCapsLock();
+      break;
+    case "ControlLeft":
+      checkCtrl = 1;
+      break;
+    case "ControlRight":
+      checkCtrl = 1;
+      break;
+    case "AltRight":
+      checkAlt = 1;
+      break;
+    case "AltLeft":
+      checkAlt = 1;
+      break;
+    default:
+  }
+  changeLanguage();
+  buttonDown(findButton(e.code, e.key));
+};
+
+let keyup = (e) => {
+  e.preventDefault();
+  switch (e.code) {
+    case "ShiftLeft":
+      shiftUp();
+      break;
+    case "ShiftRight":
+      shiftUp();
+      break;
+    case "CapsLock":
+      checkCaps = 1;
+      break;
+    case "ControlLeft":
+      checkCtrl = 0;
+      break;
+    case "ControlRight":
+      checkCtrl = 0;
+      break;
+    case "AltRight":
+      checkAlt = 0;
+      break;
+    case "AltLeft":
+      checkAlt = 0;
+      break;
+    default:
+  }
+  buttonUp(findButton(e.code, e.key));
+  checkChange = 1;
+};
+
+document.addEventListener("keyup", keyup);
+document.addEventListener("keydown", keydown);

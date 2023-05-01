@@ -211,3 +211,34 @@ function capsLock() {
   }
   change();
 }
+
+let checkButtons = ["key-wrapper", "line", "Shift", "Ctrl", "Alt", "Win"];
+wrapper.addEventListener("click", (e) => {
+  let buttonClassName = e.target.className;
+  let buttonInnerText = e.target.innerText;
+  if (!checkButtons.includes(buttonClassName) && !checkButtons.includes(buttonInnerText)) {
+    textInput.focus();
+    switch (buttonInnerText) {
+      case "":
+        textInput.setRangeText(" ", textInput.selectionStart, textInput.selectionEnd, "end");
+        break;
+      case "Tab":
+        textInput.setRangeText("    ", textInput.selectionStart, textInput.selectionEnd, "end");
+        break;
+      case "Backspace":
+        if (textInput.selectionStart > 0)textInput.setRangeText("", textInput.selectionStart - 1, textInput.selectionEnd, "end");
+        break;
+      case "Del":
+        textInput.setRangeText("", textInput.selectionStart, textInput.selectionEnd + 1, "end");
+        break;
+      case "Enter":
+        textInput.setRangeText("\n", textInput.selectionStart, textInput.selectionEnd, "end");
+        break;
+      case "CapsLock":
+        capsLock();
+        break;
+      default:
+        textInput.setRangeText(buttonInnerText, textInput.selectionStart, textInput.selectionEnd, "end");
+    }
+  }
+});

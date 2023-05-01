@@ -187,3 +187,27 @@ function animationUp(e) {
   }
 }
 
+function capsLock() {
+  switch (type) {
+    case "ruSmall":
+      type = "ruCaps";
+      capsLockButton.classList.add("active");
+      animationDown(capsLockButton);
+      break;
+    case "enSmall":
+      type = "enCaps";
+      capsLockButton.classList.add("active");
+      animationDown(capsLockButton);
+      break;
+    case "ruCaps":
+      type = "ruSmall";
+      capsLockButton.classList.remove("active");
+      animationUp(capsLockButton);
+      break;
+    default:
+      type = "enSmall";
+      capsLockButton.classList.remove("active");
+      animationUp(capsLockButton);
+  }
+  change();
+}

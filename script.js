@@ -56,7 +56,7 @@ const fifthLineKeys = {
 };
 
 let textLanguage = document.createElement("p");
-textLanguage.innerText = "Клавиатура создана в операционной системе Windows\nКнопки для смены языка: ctrl+alt";
+textLanguage.innerText = "Клавиатура создана в операционной системе Windows\nКнопки для смены языка: ctrl+alt\nПо всем вопросам (по пул реквесту и оформлению репозитория в т.ч.) пишите в дискорд: Rostik_Petrushka#7855";
 
 let textInput = document.createElement("textarea");
 textInput.classList.add("text-input");

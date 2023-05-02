@@ -56,7 +56,7 @@ const fifthLineKeys = {
 };
 
 let textLanguage = document.createElement("p");
-textLanguage.innerText = "Клавиатура создана в операционной системе Windows\nКнопки для смены языка: ctrl+alt\nПо всем вопросам (по пул реквесту и оформлению репозитория в т.ч.) пишите в дискорд: Rostik_Petrushka#7855";
+textLanguage.innerText = "Клавиатура создана в операционной системе Windows\nКнопки для смены языка: alt+shift\nПо всем вопросам (по пул реквесту и оформлению репозитория в т.ч.) пишите в дискорд: Rostik_Petrushka#7855";
 
 let textInput = document.createElement("textarea");
 textInput.classList.add("text-input");
@@ -346,11 +346,11 @@ wrapper.addEventListener("mouseout", (e) => {
 
 let checkCaps = 1; // проверка нажата ли кнопка CapsLock
 let checkChange = 1; // проверка нажаты ли кнопки для смены языка
-let checkCtrl = 0; // проверка нажата ли кнопка ctrl
+let checkShift = 0; // проверка нажата ли кнопка ctrl
 let checkAlt = 0; // проверка нажата ли кнопка alt
 
 function changeLanguage() {
-  if (checkCtrl && checkAlt && checkChange) {
+  if (checkShift && checkAlt && checkChange) {
     checkChange = 0;
     if (type[0] === "r") {
       type = (`en${type.slice(2)}`);
@@ -365,6 +365,10 @@ function findOtherButton(key) {
   let saveType = type;
   if (type[0] !== "e") {
     type = (`en${type.slice(2)}`);
+    change();
+  }
+  else {
+    type = (`ru${type.slice(2)}`);
     change();
   }
   for (let i = 0; i < arrayLines.length; i++) {
@@ -425,6 +429,7 @@ let keydown = (e) => {
   switch (e.code) {
     case "ShiftLeft":
       shiftDown();
+      checkShift = 1;
       break;
     case "ShiftRight":
       shiftDown();
@@ -433,10 +438,8 @@ let keydown = (e) => {
       checkCapsLock();
       break;
     case "ControlLeft":
-      checkCtrl = 1;
       break;
     case "ControlRight":
-      checkCtrl = 1;
       break;
     case "AltRight":
       checkAlt = 1;
@@ -463,10 +466,8 @@ let keyup = (e) => {
       checkCaps = 1;
       break;
     case "ControlLeft":
-      checkCtrl = 0;
       break;
     case "ControlRight":
-      checkCtrl = 0;
       break;
     case "AltRight":
       checkAlt = 0;
